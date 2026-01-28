@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\DeclareMathOperator*{\argminA}{arg\,min}
+\title{PhD Project - 1st Progress Report}
+\author{Jakub Koubele}
+\date{\today}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amssymb}
+%\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\graphicspath{ {/} }
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\bibliographystyle{apalike}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{blindtext}
+
+
+
+\usepackage{amsthm}
+
+\begin{document}
+	
+	\maketitle
+	
+	Lorem Ipsum, citing myself: \citep{koubeleEstimatingChangesRNA2025a}.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/total_rna.png}
+		\caption{Intronic RNA (in blue) in total RNA-seq may come from two distinct sources: either the intron is currently being transcribed by RNA polymerase, or it was already finished, but not spliced and degraded yet. The finished introns may still be part of the nascent RNA or may come from retained introns in mature RNA.}
+		\label{fig:total_rna}
+	\end{figure}
+	
+	\bibliography{references}
+	
+		
+	\end{document}

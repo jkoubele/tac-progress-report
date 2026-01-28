@@ -1,0 +1,9 @@
+@article{koubeleEstimatingChangesRNA2025a,
+  title  = {Estimating Changes in {RNA Polymerase II} Elongation and Intron Splicing Speeds from Total {RNA-seq} Data},
+  author = {Koubele, Jakub and Beyer, Andreas},
+  year   = {2025},
+  month  = aug,
+  note   = {bioRxiv preprint},
+  doi    = {10.1101/2025.08.24.672013},
+  url    = {https://www.biorxiv.org/content/10.1101/2025.08.24.672013v1}
+}
