@@ -38,7 +38,28 @@
 	
 	\maketitle
 	
-	Lorem Ipsum, citing myself: \citep{koubeleEstimatingChangesRNA2025a}.
+	\section{Introduction}
+	My PhD project consists of two main parts: 
+	\begin{enumerate}
+		\item Development of a computational method analyzing changes in RNA elongation speed from total RNA-seq data.
+		\item Calling of mismatched in transcript from single-cell RNA-seq data, and integration of it with single-cell data analysis.
+	\end{enumerate}
+	From my last TAC meeting (where the initial research proposal was discussed) held in the March 2025, I did spend most of my time working on the first part of my PhD project (the elongation speed model).
+	
+	I developed a statistical model that jointly estimates not only the changes in RNA elongation speed, but also the changes in intron splicing speed. The pre-print of this work is available on BioRxiv \citep{koubeleEstimatingChangesRNA2025a}, and the implementation of the model is provided as an open-source software. 
+	
+	Development of the model turned out to be more challenging than I initially expected, as multiple aspect of the RNA metabolism influence the total RNA-seq data simultaneously. Besides the mentioned speed of intron splicing (for which the model accounts), changes in the RNA degradation rate (resp. the transcripts half-life) have an impact on the observed data, which complicates the application of the model. I am currently trying to finalize the development of the model and then submit the paper for a publication.
+	
+	For the second part of my PhD project (calling of transcript mismatches from single-cell RNA-seq data), I managed to conduct only a brief analysis of a dataset of mice with knock-down in the Ercc1 gene. As this preliminary analysis didn't shown any significant difference in the number of somatic mutations between the knockdown and control samples, I decided to focus on the development of the elongation speed model for now.
+	
+	\section{Statistical model of changes in transcription elongation and intron splicing speeds}
+	This part of my PhD project is a follow-up on the work conducted previously by other members of Beyer lab \citep{debesAgeingassociatedChangesTranscriptional2023}. I initially intended to develop a statistical model for measuring changes in transcription elongation speed, that would improve over the previous work in the following aspects:
+	\begin{itemize}
+		\item I wanted to set the model to a statistical framework similar to how differential expression analysis is commonly conducted, e.g. as in the DESeq2 package \citep{loveModeratedEstimationFold2014}. That is, the model estimates effects of arbitrary covariates (e.g., the treatment effect, but also the effect of sources of unwanted variation such as sequencing batch), and contrasts of interests are statistically tested. This is performed on level of individual genes or introns; downstream analysis can be then performed, e.g., gene set enrichment analysis of genes with statistically significant increase in transcription elongations speed.
+		\item Previous work utilized measurement of read coverage in introns to estimate the changes in elongation speed. However, this measurement is influenced not only by changes in the elongation speed, but also by changes in the gene expression. To distinguish the effect caused by changes in elongation speed only, I intended to estimate gene expression changes by accounting also for changes in exon read counts , which is mostly not influenced by changes in elongation speed.
+	\end{itemize}	
+	
+
 	
 	\begin{figure}[htbp]
 		\centering
@@ -46,8 +67,7 @@
 		\caption{Intronic RNA (in blue) in total RNA-seq may come from two distinct sources: either the intron is currently being transcribed by RNA polymerase, or it was already finished, but not spliced and degraded yet. The finished introns may still be part of the nascent RNA or may come from retained introns in mature RNA.}
 		\label{fig:total_rna}
 	\end{figure}
-
-        Dolor sit amed, trying commit from Overleaf.
+       
 	
 	\bibliography{references}
 	
