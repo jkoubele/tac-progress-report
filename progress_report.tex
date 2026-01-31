@@ -4,9 +4,10 @@
 \usepackage{amsmath}
 \usepackage{verbatim}
 \DeclareMathOperator*{\argminA}{arg\,min}
-\title{PhD Project - 1st Progress Report}
+\title{Measuring Causes and Consequences of Errors in RNA  \\
+	\Large 1st Progress Report of PhD Project}
 \author{Jakub Koubele}
-\date{\today}
+\date{January 31, 2026}
 \usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{amsthm}
@@ -44,35 +45,35 @@ urlcolor=blue]{hyperref}
 	My PhD project consists of two main parts: 
 	\begin{enumerate}
 		\item Development of a computational method analyzing changes in RNA elongation speed from total RNA-seq data.
-		\item Calling of mismatched in transcript from single-cell RNA-seq data, and integration of it with single-cell data analysis.
+		\item Calling of mismatches in transcript from single-cell RNA-seq data, and integration of it with single-cell data analysis.
 	\end{enumerate}
-	From my last TAC meeting (where the initial research proposal was discussed) held in the March 2025, I did spend most of my time working on the first part of my PhD project (the elongation speed model).
+	From my last TAC meeting (where the initial research proposal was discussed), held in March 2025, I spent most of my time working on the first part of my PhD project (the elongation speed model).
 	
-	I developed a statistical model that jointly estimates not only the changes in RNA elongation speed, but also the changes in intron splicing speed. The pre-print of this work is available on BioRxiv \citep{koubeleEstimatingChangesRNA2025a} (\href{https://doi.org/10.1101/2025.08.24.672013}{link}), and the implementation of the model is provided as an open-source software. 
+	I developed a statistical model that jointly estimates not only the changes in RNA elongation speed, but also the changes in intron splicing speed. The pre-print of this work is available on bioRxiv \citep{koubeleEstimatingChangesRNA2025a} (\href{https://doi.org/10.1101/2025.08.24.672013}{link}), and the implementation of the model is provided as an open-source software (\href{https://github.com/jkoubele/pol-ii-speed}{link}). 
 	
-	Development of the model turned out to be more challenging than I initially expected, as multiple aspect of the RNA metabolism influence the total RNA-seq data simultaneously. Besides the mentioned speed of intron splicing (for which the model accounts), changes in the RNA degradation rate (i.e. the transcripts half-life) have an impact on the observed data, which complicates the application of the model (this is caused by a general limitation of steady state RNA-seq data). I am currently trying to finalize the development of the model and then submit the paper for a publication.
+	Development of the model turned out to be more challenging than I initially expected, as multiple aspects of RNA metabolism influence the total RNA-seq data simultaneously. Besides the mentioned speed of intron splicing (for which the model accounts), changes in the RNA degradation rate (i.e., the transcripts half-life) have an impact on the observed data, which complicates the application of the model (this is caused by a general limitation of steady state RNA-seq data). I am currently trying to finalize the development of the model and then submit the paper for publication.
 	
-	For the second part of my PhD project (calling of transcript mismatches from single-cell RNA-seq data), I managed to conduct only a brief analysis of a dataset of mice with knock-down in the Ercc1 gene. As this preliminary analysis didn't shown any significant difference in the number of somatic mutations between the knockdown and control samples, I decided to focus on the development of the elongation speed model for now.
+	For the second part of my PhD project (calling of transcript mismatches from single-cell RNA-seq data), I managed to conduct only a brief analysis of a dataset of mice with knockdown in the Ercc1 gene. As this preliminary analysis didn't show any significant difference in the number of somatic mutations between the knockdown and control samples, I decided to focus on the development of the elongation speed model for now.
 	
 	\section{Statistical model of changes in transcription elongation and intron splicing speeds}
-	This part of my PhD project is a follow-up on the work conducted previously by other members of the Beyer lab \citep{debesAgeingassociatedChangesTranscriptional2023}. I initially intended to develop a statistical model for measuring changes in transcription elongation speed, that would improve over the previous work in the following aspects:
+	This part of my PhD project is a follow-up on the work conducted previously by other members of the Beyer lab \citep{debesAgeingassociatedChangesTranscriptional2023}. I initially intended to develop a statistical model for measuring changes in transcription elongation speed, which would improve over the previous work in the following aspects:
 	\begin{itemize}
-		\item I wanted to set the model to a statistical framework similar to how differential expression analysis is commonly conducted, e.g. as in the DESeq2 package \citep{loveModeratedEstimationFold2014}. That is, the model estimates effects of arbitrary covariates (e.g., the treatment effect, but also the effect of sources of unwanted variation such as sequencing batch), and contrasts of interests are statistically tested. This is performed on level of individual genes or introns; downstream analysis can be then performed, e.g., gene set enrichment analysis of genes with statistically significant increase in transcription elongation speed.
-		\item Previous work utilized measurement of read coverage in introns to estimate the changes in elongation speed. However, this measurement is influenced not only by changes in the elongation speed, but also by changes in the gene expression. To distinguish the effect caused by changes in elongation speed only, I intended to estimate gene expression changes by accounting also for changes in exon read counts , which is mostly not influenced by changes in elongation speed.
+		\item I wanted to set the model to a statistical framework similar to how differential expression analysis is commonly conducted, e.g., as in the DESeq2 package \citep{loveModeratedEstimationFold2014}. That is, the model estimates effects of arbitrary covariates (e.g., the treatment effect, but also the effect of sources of unwanted variation such as sequencing batch), and contrasts of interest are statistically tested. This is performed on the level of individual genes or introns; downstream analysis can then be performed, e.g., gene set enrichment analysis of genes with a statistically significant increase in transcription elongation speed.
+		\item Previous work utilized measurement of read coverage in introns to estimate the changes in elongation speed. However, this measurement is influenced not only by changes in the elongation speed but also by changes in the gene expression. To distinguish the effect caused by changes in elongation speed only, I intended to estimate gene expression changes by accounting also for changes in exon read counts, which are mostly not influenced by changes in elongation speed.
 	\end{itemize}	
-	I successfully implemented the model with respect to the first goal. The model explicitly specifies the probability distribution of the observed data (conditioned on the model parameters), and the parameters are estimated by the maximum likelihood estimation (MLE). Hypotheses (contrasts of interests) are then tested by the likelihood-ratio test. 
+	I successfully implemented the model with respect to the first goal. The model explicitly specifies the probability distribution of the observed data (conditioned on the model parameters), and the parameters are estimated by maximum likelihood estimation (MLE). Hypotheses (contrasts of interests) are then tested by the likelihood-ratio test. 
 	
-	The implementation is done with the usage of PyTorch library \citep{anselPyTorch2Faster2024}, making use of its automatic differentiation system for model fitting. The surrounding workflow, from pre-processing of the input data to the model fitting, is orchestrated with Nextflow \citep{ditommasoNextflowEnablesReproducible2017}.
+	The implementation is done with the usage of the PyTorch library \citep{anselPyTorch2Faster2024}, making use of its automatic differentiation system for model fitting. The surrounding workflow, from pre-processing of the input data to the model fitting, is orchestrated with Nextflow \citep{ditommasoNextflowEnablesReproducible2017}.
 	
 	With respect to the second goal - accounting for the changes in gene expression - I realized that the landscape of relevant aspects of RNA metabolism is even more complex. Currently, I believe that the following four aspects of RNA metabolism need to be considered jointly, in order to correctly estimate the changes in the transcription elongation speed:
 	\begin{enumerate}
-		\item Gene expression (how often is given gene being transcribed)
+		\item Gene expression (how often is a given gene being transcribed)
 		\item Transcription elongations speed
 		\item Speed of intron splicing
 		\item Degradation rate of mature RNA
 	\end{enumerate}  
-
-	In this progress report, I provide a schematic illustrations of how these different aspects of RNA metabolism influence the observed data. For a more technical description, please see the bioRxiv pre-print.
+	
+	In this progress report, I provide a schematic illustration of how these different aspects of RNA metabolism influence the observed data. For a more technical description, please see the bioRxiv pre-print.
 	
 	The method works with a total RNA-seq, which is a combination of nascent and mature RNA (see Figure \ref{fig:total_rna}). Changes in different aspects of RNA metabolism then affect the composition of the RNA pool present in a given sample (see Figures \ref{fig:gene_expression} - \ref{fig:rna_degradation}).
 	
@@ -86,14 +87,14 @@ urlcolor=blue]{hyperref}
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=1.1\textwidth]{figures/gene_expression.png}
-		\caption{Changes in gene expression (how often is a given gene transcribed) increases the abundance of both nascent and mature RNA of that gene.}
+		\caption{Changes in gene expression (how often is a given gene transcribed) increase the abundance of both nascent and mature RNA of that gene.}
 		\label{fig:gene_expression}
 	\end{figure}
 	
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=1.1\textwidth]{figures/elongation_speed.png}
-		\caption{Effect of the change in the elongation speed. In the condition with faster RNA polymerase (right), there is less polymerases currently transcribing a gene, compared to the	condition with slower polymerase (left). Note that the amount of mature RNA is
+		\caption{Effect of the change in the elongation speed. In the condition with faster RNA polymerase (right), there are fewer polymerases currently transcribing a gene, compared to the	condition with slower polymerase (left). Note that the amount of mature RNA is
 			not affected by the change in elongation speed.}
 		\label{fig:elongation_speed}
 	\end{figure}
@@ -101,32 +102,54 @@ urlcolor=blue]{hyperref}
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=1.1\textwidth]{figures/splicing_time.png}
-		\caption{Splicing speed influences the number of fully transcribed introns that are not spliced and degraded yet; with slower splicing (right), the sample will contain more of such transcribed introns. As we are rellying on the short read RNA sequencing, we are not able to distinguish unspliced introns in the nascent RNA from the retained introns in the mature RNA.}
+		\caption{Splicing speed influences the number of fully transcribed introns that are not spliced and degraded yet; with slower splicing (right), the sample will contain more of such transcribed introns. As we are relying on the short read RNA sequencing, we are not able to distinguish unspliced introns in the nascent RNA from the retained introns in the mature RNA.}
 		\label{fig:splicing_time}
 	\end{figure}
 	
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=1.1\textwidth]{figures/rna_degradation.png}
-		\caption{RNA degradation rate influence the amount of mature RNA, but not of the nascent RNA. With faster degradation (right), less mature RNA will be present in the sample.}
+		\caption{RNA degradation rate influences the amount of mature RNA, but not of the nascent RNA. With faster degradation (right), less mature RNA will be present in the sample.}
 		\label{fig:rna_degradation}
 	\end{figure}
 	
-	Changes in each aspect of the RNA metabolism listed above produces different change in the RNA content of the sample and consequently in the sequencing data. In my model, the log fold changes (LFCs) of different aspects of the RNA metabolism are the parameters being fitted and statistically tested. As there is no observable quantity (e.g., the number of intronic reads) that would be affected by the elongation speed only, the model needs to consider all other aspects of RNA metabolism, in order to disambiguate which of them can be used to explain the observed data.
+	Changes in each aspect of the RNA metabolism listed above produce different changes in the RNA content of the sample and consequently in the sequencing data. In my model, the log fold changes (LFCs) of different aspects of the RNA metabolism are the parameters being fitted and statistically tested. As there is no observable quantity (e.g., the number of intronic reads) that would be affected by the elongation speed only, the model needs to consider all other aspects of RNA metabolism in order to disambiguate which of them can be used to explain the observed data.
 	
-	However, I recently realized that the estimation of all LFCs of interest is a subject to the following limitation: the total RNA-seq data used in the model are usually assumed to be from a steady state condition (i.e., even thought the dataset contains samples with different covariates, such as treatment and control group, we are not observing a time-course data of a samples subjected to some sort of sudden perturbation). However, such steady-state observation is invariant to a scaling of all metabolic rates by a positive constant. If, for example, samples in the treatment group would have $2\times$ higher gene expression rate, but also $2\times$ faster transcription elongation, intron splicing and RNA degradation, no changes would be observable (using total RNA-seq) with comparison to the control group.
+	However, I recently realized that the estimation of all LFCs of interest is a subject to the following limitation: the total RNA-seq data used in the model are usually assumed to be from a steady state condition (i.e., even thought the dataset contains samples with different covariates, such as treatment and control group, we are not observing a time-course data of a samples subjected to some sort of sudden perturbation). However, such steady-state observation is invariant to a scaling of all metabolic rates by a positive constant. If, for example, samples in the treatment group would have $2\times$ higher gene expression rate, but also $2\times$ faster transcription elongation, intron splicing, and RNA degradation, no changes would be observable (using total RNA-seq) with comparison to the control group.
 	
-	Consequently, the LFCs of all aspects of the RNA metabolism cannot be simultaneously estimated using total RNA-seq data; one rate must be left as a baseline, to which the estimation of all remaining rates would be related. In my model, the RNA degradation rate is not included as a model parameter, and only changes in the gene expression, transcription elongation and intron splicing are estimated explicitly. However, as the RNA degradation rate may actually change between samples, such change would influence the remaining LFCs estimated by the model.
+	Consequently, the LFCs of all aspects of RNA metabolism cannot be simultaneously estimated using total RNA-seq data; one rate must be left as a baseline, to which the estimation of all remaining rates would be related. In my model, the RNA degradation rate is not included as a model parameter, and only changes in the gene expression, transcription elongation, and intron splicing are estimated explicitly. However, as the RNA degradation rate may actually change between samples, such a change would influence the remaining LFCs estimated by the model.
 	
-	Due to this limitation inherent to total RNA-seq data, I am currently discussing (with my supervisor) the option to conduct experiment(s) using RNA labeling method. Such experiment (performed together with the total RNA-seq) would allow us to overcome the limitation of steady-state observations and correctly estimate changes in all RNA metabolism rates of interest (for a particular dataset).
-	 
-	  
-
+	Due to this limitation inherent to total RNA-seq data, I am currently discussing (with my supervisor) the option to conduct experiment(s) using the RNA labeling method. Such an experiment (performed together with the total RNA-seq) would allow us to overcome the limitation of steady-state observations and correctly estimate changes in all RNA metabolism rates of interest (for a particular dataset).
+	
+	\section{Calling of mismatches in transcript from single-cell RNA-seq data} 
+	
+	In this part of my PhD project, I am aiming to identify incorrect nucleotides present in transcripts, using single-cell RNA-seq data. Such errors in RNA sequence may come from somatic mutations, but also from transient events of so-called transcriptional mutagenesis, which may be caused by unrepaired DNA damage \citep{saxowskyRNAPolymeraseEncounters2006}.
+	
+	So far, I briefly analyzed a dataset of mouse kidney with knockdown in the Ercc1 gene, generated by Vandit Shah from the Nephrolab group. The knockdown is supposed to be specific to the distal tubule cells.
+	
+	I performed a standard single-cell RNA-seq analysis, consisting of steps such as quality control, cell clustering, cell type classification, differential gene expression analysis, and gene set enrichment analysis (\href{https://github.com/jkoubele/ercc1-mouse}{link to the code}). Then, I used the SComatic tool \citep{muyasNovoDetectionSomatic2024} for calling somatic mutations; see Figure \ref{fig:mutations} for results. This analysis didn't show any increase in the number of somatic mutations in knockdown samples, compared to wild-type controls. 
+	
+	I plan to continue the analysis of this dataset in the future, using additional tools to analyze errors in transcript sequences, as well as other aspects of the data, e.g., copy number alterations.
+	
+	\section{Conclusion and further steps}
+	
+	During the last year of my PhD project, I mostly focused on the statistical model for estimating transcription elongation speed, which turned into a more complex project, where the model is jointly estimating changes in several rates of RNA metabolism. I will strive to finalize the model and submit this work for publication. After that, I plan to shift my focus to the second part of my PhD project, the analysis of mismatches in transcripts from single-cell RNA-seq data.
 	
 	
-       
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=1.1\textwidth]{figures/mutation_count_barplot.png}
+		\caption{Unique somatic mutations per sample. Samples with knockdown in the Ercc1 gene (\textit{KD\_1} and \textit{KD\_2)} have a number of mutations comparable to wild-type control samples (\textit{Wt\_1} and \textit{Wt\_2)}.
+		}
+		\label{fig:mutations}
+	\end{figure}
+	
+	
+	\section*{Acknowledgements}
+	
+	Illustrations in this report were created using BioRender.com.
 	
 	\bibliography{references}
 	
-		
-	\end{document}
+	
+\end{document}
